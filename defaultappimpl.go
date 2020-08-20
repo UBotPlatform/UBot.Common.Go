@@ -15,6 +15,6 @@ func defaultAppProcessGroupInvitation(bot string, sender string, target string, 
 func defaultAppProcessFriendRequest(bot string, sender string, reason string) (EventResultType, *string, error) {
 	return IgnoreEvent, nil, nil
 }
-func defaultAppProcessMembershipRequest(bot string, source string, sender string, reason string) (EventResultType, *string, error) {
+func defaultAppProcessMembershipRequest(bot string, source string, sender string, inviter string, reason string) (EventResultType, *string, error) {
 	return IgnoreEvent, nil, nil
 }

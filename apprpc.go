@@ -34,7 +34,7 @@ type App struct {
 	OnMemberLeft             func(bot string, source string, sender string) (EventResultType, error)
 	ProcessGroupInvitation   func(bot string, sender string, target string, reason string) (EventResultType, *string, error)
 	ProcessFriendRequest     func(bot string, sender string, reason string) (EventResultType, *string, error)
-	ProcessMembershipRequest func(bot string, source string, sender string, reason string) (EventResultType, *string, error)
+	ProcessMembershipRequest func(bot string, source string, sender string, inviter string, reason string) (EventResultType, *string, error)
 }
 
 func (a *App) Register(rpc *wsrpc.WebsocketRPC) {
@@ -60,6 +60,6 @@ func (a *App) Register(rpc *wsrpc.WebsocketRPC) {
 		[]string{"type", "reason"})
 	rpc.Register("process_membership_request",
 		withDefault(a.ProcessMembershipRequest, defaultAppProcessMembershipRequest),
-		[]string{"bot", "source", "sender", "reason"},
+		[]string{"bot", "source", "sender", "inviter", "reason"},
 		[]string{"type", "reason"})
 }

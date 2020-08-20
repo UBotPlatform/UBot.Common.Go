@@ -10,7 +10,7 @@ type AccountEventEmitter struct {
 	OnMemberLeft             func(source string, sender string) error
 	ProcessGroupInvitation   func(sender string, target string, reason string) (EventResultType, *string, error)
 	ProcessFriendRequest     func(sender string, reason string) (EventResultType, *string, error)
-	ProcessMembershipRequest func(source string, sender string, reason string) (EventResultType, *string, error)
+	ProcessMembershipRequest func(source string, sender string, inviter string, reason string) (EventResultType, *string, error)
 }
 
 func (a *AccountEventEmitter) Get(rpcConn *wsrpc.WebsocketRPCConn) {
