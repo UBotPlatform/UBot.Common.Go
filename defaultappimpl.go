@@ -9,3 +9,12 @@ func defaultAppOnMemberJoined(bot string, source string, sender string, inviter 
 func defaultAppOnMemberLeft(bot string, source string, sender string) (EventResultType, error) {
 	return IgnoreEvent, nil
 }
+func defaultAppProcessGroupInvitation(bot string, sender string, target string, reason string) (EventResultType, *string, error) {
+	return IgnoreEvent, nil, nil
+}
+func defaultAppProcessFriendRequest(bot string, sender string, reason string) (EventResultType, *string, error) {
+	return IgnoreEvent, nil, nil
+}
+func defaultAppProcessMembershipRequest(bot string, source string, sender string, reason string) (EventResultType, *string, error) {
+	return IgnoreEvent, nil, nil
+}

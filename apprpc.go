@@ -29,9 +29,12 @@ func (a *AppApi) Get(rpcConn *wsrpc.WebsocketRPCConn) {
 }
 
 type App struct {
-	OnReceiveChatMessage func(bot string, msgType MsgType, source string, sender string, message string, info MsgInfo) (EventResultType, error)
-	OnMemberJoined       func(bot string, source string, sender string, inviter string) (EventResultType, error)
-	OnMemberLeft         func(bot string, source string, sender string) (EventResultType, error)
+	OnReceiveChatMessage     func(bot string, msgType MsgType, source string, sender string, message string, info MsgInfo) (EventResultType, error)
+	OnMemberJoined           func(bot string, source string, sender string, inviter string) (EventResultType, error)
+	OnMemberLeft             func(bot string, source string, sender string) (EventResultType, error)
+	ProcessGroupInvitation   func(bot string, sender string, target string, reason string) (EventResultType, *string, error)
+	ProcessFriendRequest     func(bot string, sender string, reason string) (EventResultType, *string, error)
+	ProcessMembershipRequest func(bot string, source string, sender string, reason string) (EventResultType, *string, error)
 }
 
 func (a *App) Register(rpc *wsrpc.WebsocketRPC) {
@@ -47,4 +50,16 @@ func (a *App) Register(rpc *wsrpc.WebsocketRPC) {
 		withDefault(a.OnMemberLeft, defaultAppOnMemberLeft),
 		[]string{"bot", "source", "sender"},
 		[]string{"type"})
+	rpc.Register("process_group_invitation",
+		withDefault(a.ProcessGroupInvitation, defaultAppProcessGroupInvitation),
+		[]string{"bot", "sender", "target", "reason"},
+		[]string{"type", "reason"})
+	rpc.Register("process_friend_request",
+		withDefault(a.ProcessFriendRequest, defaultAppProcessFriendRequest),
+		[]string{"bot", "sender", "reason"},
+		[]string{"type", "reason"})
+	rpc.Register("process_membership_request",
+		withDefault(a.ProcessMembershipRequest, defaultAppProcessMembershipRequest),
+		[]string{"bot", "source", "sender", "reason"},
+		[]string{"type", "reason"})
 }

@@ -5,15 +5,21 @@ import (
 )
 
 type AccountEventEmitter struct {
-	OnReceiveChatMessage func(msgType MsgType, source string, sender string, message string, info MsgInfo) error
-	OnMemberJoined       func(source string, sender string, inviter string) error
-	OnMemberLeft         func(source string, sender string) error
+	OnReceiveChatMessage     func(msgType MsgType, source string, sender string, message string, info MsgInfo) error
+	OnMemberJoined           func(source string, sender string, inviter string) error
+	OnMemberLeft             func(source string, sender string) error
+	ProcessGroupInvitation   func(sender string, target string, reason string) (EventResultType, *string, error)
+	ProcessFriendRequest     func(sender string, reason string) (EventResultType, *string, error)
+	ProcessMembershipRequest func(source string, sender string, reason string) (EventResultType, *string, error)
 }
 
 func (a *AccountEventEmitter) Get(rpcConn *wsrpc.WebsocketRPCConn) {
 	rpcConn.MakeNotify("on_receive_chat_message", &a.OnReceiveChatMessage, nil)
 	rpcConn.MakeNotify("on_member_joined", &a.OnMemberJoined, nil)
 	rpcConn.MakeNotify("on_member_left", &a.OnMemberLeft, nil)
+	rpcConn.MakeCall("process_group_invitation", &a.ProcessGroupInvitation, nil, []string{"type", "reason"})
+	rpcConn.MakeCall("process_friend_request", &a.ProcessFriendRequest, nil, []string{"type", "reason"})
+	rpcConn.MakeCall("process_membership_request", &a.ProcessMembershipRequest, nil, []string{"type", "reason"})
 }
 
 type Account struct {
