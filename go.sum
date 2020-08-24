@@ -1,4 +1,4 @@
-github.com/1354092549/wsrpc v0.2.3 h1:g3onITTa/ak1e1ZFqx9bEDHixNykdQSPvNOnAj2Xch4=
-github.com/1354092549/wsrpc v0.2.3/go.mod h1:rWsn6JBtSbbM4h80KWkdvI2m2M57tLmhihqNEbv64Fg=
+github.com/1354092549/wsrpc v0.3.0 h1:Mg/VeHZ3vj3Tq2Gam+URDZVcM5FQvS99D7SDMmRvOkw=
+github.com/1354092549/wsrpc v0.3.0/go.mod h1:rWsn6JBtSbbM4h80KWkdvI2m2M57tLmhihqNEbv64Fg=
 github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
