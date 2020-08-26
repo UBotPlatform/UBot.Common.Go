@@ -34,6 +34,9 @@ type Account struct {
 	GetMemberName   func(source string, target string) (string, error)
 	GetUserAvatar   func(id string) (string, error)
 	GetSelfID       func() (string, error)
+	GetPlatformID   func() (string, error)
+	GetGroupList    func() ([]string, error)
+	GetMemberList   func(id string) ([]string, error)
 }
 
 func (a *Account) Register(rpc *wsrpc.WebsocketRPC) {
@@ -80,5 +83,17 @@ func (a *Account) Register(rpc *wsrpc.WebsocketRPC) {
 	rpc.Register("get_self_id",
 		a.GetSelfID,
 		nil,
+		nil)
+	rpc.Register("get_platform_id",
+		a.GetPlatformID,
+		nil,
+		nil)
+	rpc.Register("get_group_list",
+		a.GetGroupList,
+		nil,
+		nil)
+	rpc.Register("get_member_list",
+		a.GetMemberList,
+		[]string{"id"},
 		nil)
 }

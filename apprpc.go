@@ -14,6 +14,9 @@ type AppApi struct {
 	GetMemberName   func(bot string, source string, target string) (string, error)
 	GetUserAvatar   func(bot string, id string) (string, error)
 	GetSelfID       func(bot string) (string, error)
+	GetPlatformID   func(bot string) (string, error)
+	GetGroupList    func(bot string) ([]string, error)
+	GetMemberList   func(bot string, id string) ([]string, error)
 }
 
 func (a *AppApi) Get(rpcConn *wsrpc.WebsocketRPCConn) {
@@ -26,6 +29,9 @@ func (a *AppApi) Get(rpcConn *wsrpc.WebsocketRPCConn) {
 	rpcConn.MakeCall("get_member_name", &a.GetMemberName, nil, nil)
 	rpcConn.MakeCall("get_user_avatar", &a.GetUserAvatar, nil, nil)
 	rpcConn.MakeCall("get_self_id", &a.GetSelfID, nil, nil)
+	rpcConn.MakeCall("get_platform_id", &a.GetPlatformID, nil, nil)
+	rpcConn.MakeCall("get_group_list", &a.GetGroupList, nil, nil)
+	rpcConn.MakeCall("get_member_list", &a.GetMemberList, nil, nil)
 }
 
 type App struct {
