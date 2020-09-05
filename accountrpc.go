@@ -25,8 +25,6 @@ func (a *AccountEventEmitter) Get(rpcConn *wsrpc.WebsocketRPCConn) {
 type Account struct {
 	GetGroupName    func(id string) (string, error)
 	GetUserName     func(id string) (string, error)
-	Login           func() error
-	Logout          func() error
 	SendChatMessage func(msgType MsgType, source string, target string, message string) error
 	RemoveMember    func(source string, target string) error
 	ShutupMember    func(source string, target string, duration int) error
@@ -47,14 +45,6 @@ func (a *Account) Register(rpc *wsrpc.WebsocketRPC) {
 	rpc.Register("get_user_name",
 		a.GetUserName,
 		[]string{"id"},
-		nil)
-	rpc.Register("login",
-		a.Login,
-		[]string{},
-		nil)
-	rpc.Register("logout",
-		a.Logout,
-		[]string{},
 		nil)
 	rpc.Register("send_chat_message",
 		a.SendChatMessage,
