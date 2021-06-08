@@ -10,21 +10,49 @@ func ParseMsg(content string) []MsgEntity {
 	r := make([]MsgEntity, 0, 4)
 	var curData strings.Builder
 	inBracket := false
-	curType := "text"
+	var curType string
 	start, count := 0, 0
 	var i int
+	var args []string
+	var namedArgs map[string]string
+	var isNamedArg bool
+	var curArgName string
 	flushBuf := func() {
 		curData.WriteString(content[start : start+count])
 		start = i + 1
 		count = 0
 	}
-	newEntity := func(newType string) {
+	finishArg := func() {
 		flushBuf()
-		if curData.Len() != 0 || curType != "text" {
-			r = append(r, MsgEntity{Type: curType, Data: curData.String()})
+		if isNamedArg {
+			if namedArgs == nil {
+				namedArgs = make(map[string]string)
+			}
+			namedArgs[curArgName] = curData.String()
+		} else {
+			args = append(args, curData.String())
 		}
 		curData.Reset()
+		curArgName = ""
+		isNamedArg = false
+	}
+	endText := func() {
+		flushBuf()
+		if curData.Len() != 0 {
+			r = append(r, MsgEntity{Type: "text", Args: []string{curData.String()}})
+		}
+		curData.Reset()
+	}
+	beginEntity := func(newType string) {
+		endText()
+		args = make([]string, 0, 1)
+		namedArgs = nil
 		curType = newType
+	}
+	endEntity := func() {
+		finishArg()
+		r = append(r, MsgEntity{Type: curType, Args: args, NamedArgs: namedArgs})
+		args = make([]string, 0, 1)
 	}
 	for i = 0; i < len(content); i++ {
 		switch content[i] {
@@ -47,12 +75,27 @@ func ParseMsg(content string) []MsgEntity {
 				break
 			}
 			i = j
-			newEntity(newType)
+			beginEntity(newType)
 			inBracket = true
 		case ']':
 			if inBracket {
-				newEntity("text")
+				endEntity()
 				inBracket = false
+			} else {
+				count++
+			}
+		case ',':
+			if inBracket {
+				finishArg()
+			} else {
+				count++
+			}
+		case '=':
+			if inBracket && !isNamedArg {
+				flushBuf()
+				curArgName = curData.String()
+				isNamedArg = true
+				curData.Reset()
 			} else {
 				count++
 			}
@@ -65,6 +108,10 @@ func ParseMsg(content string) []MsgEntity {
 			case '[':
 				fallthrough
 			case ']':
+				fallthrough
+			case ',':
+				fallthrough
+			case '=':
 				fallthrough
 			case '\\':
 				i++
@@ -141,9 +188,6 @@ func ParseMsg(content string) []MsgEntity {
 			count++
 		}
 	}
-	flushBuf()
-	if curData.Len() != 0 || curType != "text" {
-		r = append(r, MsgEntity{Type: curType, Data: curData.String()})
-	}
+	endText()
 	return r
 }
