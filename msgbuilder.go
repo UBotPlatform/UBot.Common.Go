@@ -117,7 +117,10 @@ func (b *MsgBuilder) WriteString(s string) *MsgBuilder {
 }
 
 func lowCodePointNeedEscape(codePoint rune) bool {
-	return (codePoint >= 0xA9 && codePoint <= 0xAE) || (codePoint >= 0x200D && codePoint <= 0x3299)
+	// Escape some symbol to ensure some ANSI program can handle it easily
+	// This is implementation defined
+	// We can even `return false` or `return true` here
+	return (codePoint >= 0xA9 && codePoint <= 0xAE) || (codePoint >= 0x2580 && codePoint <= 0x2FFF)
 }
 
 func (b *MsgBuilder) WriteEntity(e MsgEntity) *MsgBuilder {
