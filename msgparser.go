@@ -13,7 +13,7 @@ func ParseMsg(content string) []MsgEntity {
 	var curType string
 	start, count := 0, 0
 	var i int
-	var args []string
+	var args = make([]string, 0, 1)
 	var namedArgs map[string]string
 	var isNamedArg bool
 	var curArgName string
@@ -45,14 +45,13 @@ func ParseMsg(content string) []MsgEntity {
 	}
 	beginEntity := func(newType string) {
 		endText()
-		args = make([]string, 0, 1)
-		namedArgs = nil
 		curType = newType
 	}
 	endEntity := func() {
 		finishArg()
 		r = append(r, MsgEntity{Type: curType, Args: args, NamedArgs: namedArgs})
 		args = make([]string, 0, 1)
+		namedArgs = nil
 	}
 	for i = 0; i < len(content); i++ {
 		switch content[i] {

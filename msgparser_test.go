@@ -44,9 +44,10 @@ func TestMsgParser(t *testing.T) {
 	}
 
 	//Args Test
-	entities = ubot.ParseMsg(`[image:<url>1\,2\=3,md5=xxx]`)
+	entities = ubot.ParseMsg(`[image:<url>1\,2\=3,md5=xxx][file:<xxx>,a=b]`)
 	if !reflect.DeepEqual(entities, []ubot.MsgEntity{
 		{Type: "image", Args: []string{"<url>1,2=3"}, NamedArgs: map[string]string{"md5": "xxx"}},
+		{Type: "file", Args: []string{"<xxx>"}, NamedArgs: map[string]string{"a": "b"}},
 	}) {
 		t.Fail()
 	}
